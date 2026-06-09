@@ -3,6 +3,7 @@ package com.taskflow.backend.controller;
 import com.taskflow.backend.model.Task;
 import com.taskflow.backend.service.TaskService;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,13 +32,13 @@ public class TaskController {
 
     // Crear tarea
     @PostMapping
-    public Task crearTarea(@RequestBody Task task) {
+    public Task crearTarea(@Valid@RequestBody Task task) {
         return taskService.crearTarea(task);
     }
 
     // Actualizar tarea
     @PutMapping("/{id}")
-    public Task actualizarTarea(@PathVariable Long id, @RequestBody Task task) {
+    public Task actualizarTarea(@PathVariable Long id, @Valid @RequestBody Task task) {
         return taskService.actualizarTarea(id, task);
     }
 
