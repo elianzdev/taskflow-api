@@ -1,7 +1,7 @@
 package com.taskflow.backend.controller;
 
 import com.taskflow.backend.model.Task;
-import com.taskflow.backend.repository.TaskRepository;
+import com.taskflow.backend.service.TaskService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,46 +11,39 @@ import java.util.Optional;
 @RequestMapping("/tasks")
 public class TaskController {
 
-    private final TaskRepository taskRepository;
+    private final TaskService taskService;
 
-    public TaskController(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
     }
 
     // Obtener todas las tareas
     @GetMapping
     public List<Task> obtenerTareas() {
-        return taskRepository.findAll();
+        return taskService.obtenerTareas();
     }
 
     // Obtener tarea por ID
     @GetMapping("/{id}")
     public Optional<Task> obtenerTareaPorId(@PathVariable Long id) {
-        return taskRepository.findById(id);
+        return taskService.obtenerTareaPorId(id);
     }
 
     // Crear tarea
     @PostMapping
     public Task crearTarea(@RequestBody Task task) {
-        return taskRepository.save(task);
+        return taskService.crearTarea(task);
     }
 
     // Actualizar tarea
     @PutMapping("/{id}")
-    public Task actualizarTarea(@PathVariable Long id, @RequestBody Task nuevaTask) {
-
-        Task task = taskRepository.findById(id).orElseThrow();
-
-        task.setTitulo(nuevaTask.getTitulo());
-        task.setDescripcion(nuevaTask.getDescripcion());
-        task.setEstado(nuevaTask.getEstado());
-
-        return taskRepository.save(task);
+    public Task actualizarTarea(@PathVariable Long id, @RequestBody Task task) {
+        return taskService.actualizarTarea(id, task);
     }
 
     // Eliminar tarea
     @DeleteMapping("/{id}")
     public void eliminarTarea(@PathVariable Long id) {
-        taskRepository.deleteById(id);
+        taskService.eliminarTarea(id);
     }
 }
