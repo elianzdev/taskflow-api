@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import Navbar from "../components/Navbar";
 
 function Dashboard() {
 
@@ -104,6 +105,9 @@ const cargarTarea = (task) => {
 };
 
   return (
+
+    <>
+  <Navbar />
 
     <div className="container mt-5">
 
@@ -219,6 +223,7 @@ const cargarTarea = (task) => {
       </div>
 
     </div>
+    </>
   );
 }
 
