@@ -31,6 +31,14 @@ function Dashboard() {
     }
   };
 
+  const limpiarFormulario = () => {
+
+    setTitulo("");
+    setDescripcion("");
+    setEstado("");
+    setEditandoId(null);
+  };
+
   const crearTarea = async (e) => {
 
     e.preventDefault();
@@ -43,9 +51,7 @@ function Dashboard() {
         estado,
       });
 
-      setTitulo("");
-      setDescripcion("");
-      setEstado("");
+      limpiarFormulario();
 
       obtenerTareas();
 
@@ -57,172 +63,256 @@ function Dashboard() {
 
   const actualizarTarea = async (e) => {
 
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
+    try {
 
-    await api.put(`/tasks/${editandoId}`, {
-      titulo,
-      descripcion,
-      estado,
-    });
+      await api.put(`/tasks/${editandoId}`, {
+        titulo,
+        descripcion,
+        estado,
+      });
 
-    setTitulo("");
-    setDescripcion("");
-    setEstado("");
+      limpiarFormulario();
 
-    setEditandoId(null);
+      obtenerTareas();
 
-    obtenerTareas();
+    } catch (error) {
 
-  } catch (error) {
-
-    alert("Error al actualizar tarea");
-  }
-};
+      alert("Error al actualizar tarea");
+    }
+  };
 
   const eliminarTarea = async (id) => {
 
-  try {
+    try {
 
-    await api.delete(`/tasks/${id}`);
+      await api.delete(`/tasks/${id}`);
 
-    obtenerTareas();
+      obtenerTareas();
 
-  } catch (error) {
+    } catch (error) {
 
-    alert("Error al eliminar tarea");
-  }
-};
+      alert("Error al eliminar tarea");
+    }
+  };
 
-const cargarTarea = (task) => {
+  const cargarTarea = (task) => {
 
-  setTitulo(task.titulo);
-  setDescripcion(task.descripcion);
-  setEstado(task.estado);
+    setTitulo(task.titulo);
+    setDescripcion(task.descripcion);
+    setEstado(task.estado);
 
-  setEditandoId(task.id);
-};
+    setEditandoId(task.id);
+  };
 
   return (
 
     <>
-  <Navbar />
+      <Navbar />
 
-    <div className="container mt-5">
+      <div
+        className="container py-5"
+        style={{ minHeight: "100vh" }}
+      >
 
-      <h1 className="mb-4">Dashboard</h1>
+        <div className="mb-5">
 
-      <div className="card mb-4">
+          <h1 className="fw-bold">
+            Dashboard
+          </h1>
 
-        <div className="card-body">
+          <p className="text-muted">
+            Administra tus tareas fácilmente.
+          </p>
 
-          <h4 className="mb-3">Crear tarea</h4>
+        </div>
 
-          <form
-               onSubmit={
-               editandoId ? actualizarTarea : crearTarea
-           }
-          >
+        <div className="card border-0 shadow-sm mb-5">
 
-            <div className="mb-3">
+          <div className="card-body p-4">
 
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Título"
-                value={titulo}
-                onChange={(e) => setTitulo(e.target.value)}
-              />
+            <div className="d-flex justify-content-between align-items-center mb-4">
+
+              <h4 className="fw-bold mb-0">
+
+                {
+                  editandoId
+                    ? "Editar tarea"
+                    : "Nueva tarea"
+                }
+
+              </h4>
+
+              {
+                editandoId && (
+
+                  <button
+                    className="btn btn-outline-secondary btn-sm"
+                    onClick={limpiarFormulario}
+                  >
+                    Cancelar
+                  </button>
+                )
+              }
 
             </div>
 
-            <div className="mb-3">
+            <form
+              onSubmit={
+                editandoId
+                  ? actualizarTarea
+                  : crearTarea
+              }
+            >
 
-              <textarea
-                className="form-control"
-                placeholder="Descripción"
-                value={descripcion}
-                onChange={(e) => setDescripcion(e.target.value)}
-              />
+              <div className="mb-3">
 
-            </div>
+                <label className="form-label fw-semibold">
+                  Título
+                </label>
 
-            <div className="mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Ingrese el título"
+                  value={titulo}
+                  onChange={(e) => setTitulo(e.target.value)}
+                  required
+                />
 
-              <select
-                className="form-control"
-                value={estado}
-                onChange={(e) => setEstado(e.target.value)}
+              </div>
+
+              <div className="mb-3">
+
+                <label className="form-label fw-semibold">
+                  Descripción
+                </label>
+
+                <textarea
+                  className="form-control"
+                  rows="4"
+                  placeholder="Ingrese la descripción"
+                  value={descripcion}
+                  onChange={(e) => setDescripcion(e.target.value)}
+                  required
+                />
+
+              </div>
+
+              <div className="mb-4">
+
+                <label className="form-label fw-semibold">
+                  Estado
+                </label>
+
+                <select
+                  className="form-select"
+                  value={estado}
+                  onChange={(e) => setEstado(e.target.value)}
+                  required
+                >
+
+                  <option value="">
+                    Seleccione estado
+                  </option>
+
+                  <option value="Pendiente">
+                    Pendiente
+                  </option>
+
+                  <option value="En progreso">
+                    En progreso
+                  </option>
+
+                  <option value="Completada">
+                    Completada
+                  </option>
+
+                </select>
+
+              </div>
+
+              <button className="btn btn-dark px-4">
+
+                {
+                  editandoId
+                    ? "Actualizar tarea"
+                    : "Crear tarea"
+                }
+
+              </button>
+
+            </form>
+
+          </div>
+
+        </div>
+
+        <div className="row g-4">
+
+          {
+            tasks.map((task) => (
+
+              <div
+                className="col-md-6 col-lg-4"
+                key={task.id}
               >
 
-                <option value="">Seleccione estado</option>
-                <option value="Pendiente">Pendiente</option>
-                <option value="En progreso">En progreso</option>
-                <option value="Completada">Completada</option>
+                <div className="card border-0 shadow-sm h-100">
 
-              </select>
+                  <div className="card-body d-flex flex-column p-4">
 
-            </div>
+                    <div className="mb-3">
 
-            <button className="btn btn-primary">
-              {editandoId ? "Actualizar tarea" : "Crear tarea"}
-            </button>
+                      <h5 className="fw-bold">
+                        {task.titulo}
+                      </h5>
 
-          </form>
+                      <p className="text-muted mb-0">
+                        {task.descripcion}
+                      </p>
+
+                    </div>
+
+                    <div className="mt-auto">
+
+                      <span className="badge bg-dark mb-3">
+                        {task.estado}
+                      </span>
+
+                      <div>
+
+                        <button
+                          className="btn btn-outline-danger btn-sm"
+                          onClick={() => eliminarTarea(task.id)}
+                        >
+                          Eliminar
+                        </button>
+
+                        <button
+                          className="btn btn-outline-dark btn-sm ms-2"
+                          onClick={() => cargarTarea(task)}
+                        >
+                          Editar
+                        </button>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+            ))
+          }
 
         </div>
 
       </div>
 
-      <div className="row">
-
-        {
-          tasks.map((task) => (
-
-            <div className="col-md-4 mb-3" key={task.id}>
-
-              <div className="card">
-
-                <div className="card-body">
-
-                  <h5>{task.titulo}</h5>
-
-                  <p>{task.descripcion}</p>
-
-                  <span className="badge bg-primary">
-                    {task.estado}
-                  </span>
-
-                  <div className="mt-3">
-
-                    <button
-                     className="btn btn-danger btn-sm"
-                     onClick={() => eliminarTarea(task.id)}
-                    >
-                    Eliminar
-                    </button>
-
-                    <button
-                     className="btn btn-warning btn-sm ms-2"
-                     onClick={() => cargarTarea(task)}
-                    >
-                    Editar
-                    </button>
-
-                    </div>
-
-                </div>
-
-              </div>
-
-            </div>
-          ))
-        }
-
-      </div>
-
-    </div>
     </>
   );
 }

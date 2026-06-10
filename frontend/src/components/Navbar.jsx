@@ -13,18 +13,22 @@ function Navbar() {
 
   return (
 
-    <nav className="navbar navbar-dark bg-dark px-4">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
 
-      <span className="navbar-brand">
-        TaskFlow
-      </span>
+      <div className="container">
 
-      <button
-        className="btn btn-danger"
-        onClick={logout}
-      >
-        Logout
-      </button>
+        <span className="navbar-brand fw-bold">
+          TaskFlow
+        </span>
+
+        <button
+          className="btn btn-outline-light"
+          onClick={logout}
+        >
+          Logout
+        </button>
+
+      </div>
 
     </nav>
   );
