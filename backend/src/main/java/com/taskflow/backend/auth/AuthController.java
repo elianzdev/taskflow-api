@@ -3,6 +3,7 @@ package com.taskflow.backend.auth;
 import com.taskflow.backend.model.User;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:5173") // Permitir solicitudes desde el frontend
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
