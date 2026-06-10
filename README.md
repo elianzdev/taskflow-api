@@ -54,7 +54,7 @@ taskflow-api/
 
 ## Instalación
 
-### 1️⃣ Clonar repositorio
+### Clonar repositorio
 
 ```bash
 git clone TU_REPO
