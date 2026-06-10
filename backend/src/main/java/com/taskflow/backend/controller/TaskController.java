@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:5173") // Permitir solicitudes desde el frontend
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
